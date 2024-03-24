@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Club Membership</title>
+
+    <style>
+
+        .selected {
+            text-decoration: line-through ;
+            font-style: italic;
+            color: gray;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 5px 5px 0px;
+            box-sizing: border-box;
+
+        }
+
+    </style>
+
+</head>
+<body>
+
+<h1>Student Club Roster</h1>
+
+<h2>Add Students</h2>
+
+<label for="student-name">Student Name</label><input id="student-name" name="student-name">
+<br>
+<label for="student-id">Student ID</label><input id="student-id" name="student-id">
+<br>
+<label for="student-gpa">Student GPA</label><input id="student-gpa" name="student-gpa" type="number">
+<br>
+<button id="add-student">Add Student</button>
+
+<h2>Student List</h2>
+
+<p>There are
+    <span id="student-count">
+          <!-- use JavaScript to count the number of students, and show here -->
+        </span>
+    student(s) in the club.</p>
+
+<p>Click on a student's name to select them</p>
+
+<ul id="student-list">
+    <!-- use JavaScript to create li elements  -->
+</ul>
+
+<button id="remove-selected-students">Remove selected students</button>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let studentCount = 0;
+        const studentCountElement = document.getElementById("student-count");
+        const addStudentButton = document.getElementById("add-student");
+        const studentList = document.getElementById("student-list");
+        const removeSelectedButton = document.getElementById("remove-selected-students");
+
+        function updateStudentCount() {
+            studentCountElement.textContent = studentCount;
+        }
+
+        function createNewStudentElement(text) {
+            const li = document.createElement("li");
+            li.textContent = text;
+
+            li.addEventListener("click", function() {
+                li.classList.toggle("selected");
+            });
+
+            return li;
+        }
+
+        function addStudent() {
+            const studentName = document.getElementById("student-name").value.trim();
+            const studentID = document.getElementById("student-id").value.trim();
+            const studentGPA = parseFloat(document.getElementById("student-gpa").value.trim());
+
+            if (studentName === "") {
+                alert("Please enter student name.");
+                return;
+            }
+            if (studentID === "") {
+                alert("Please enter student ID.");
+                return;
+            }
+            if (isNaN(studentGPA) || studentGPA < 0 || studentGPA > 4) {
+                alert("Please enter a valid GPA between 0 and 4.");
+                return;
+            }
+
+            const studentInfo = `${studentName}, id: ${studentID}, GPA ${studentGPA}`;
+            const newStudentElement = createNewStudentElement(studentInfo);
+
+            studentList.appendChild(newStudentElement);
+            studentCount++;
+            updateStudentCount();
+
+            document.getElementById("student-name").value = "";
+            document.getElementById("student-id").value = "";
+            document.getElementById("student-gpa").value = "";
+        }
+
+        addStudentButton.addEventListener("click", addStudent);
+
+        removeSelectedButton.addEventListener("click", function() {
+            const selectedStudents = document.querySelectorAll(".selected");
+            selectedStudents.forEach(function(student) {
+                student.remove();
+                studentCount--;
+            });
+            updateStudentCount();
+        });
+
+        updateStudentCount();
+    });
+</script>
+
+</body>
+</html>
